@@ -1,5 +1,4 @@
 from random import choice
-from xxlimited import new
 
 #destination options
 destinations = ['Austin', 'New Orleans', 'San Antonio', 'Chicago', 'Atlanta', 'Santa Fe', 'Nashville', 'Washington DC']
@@ -17,73 +16,75 @@ santa_fe_dining = ['The Shed', 'Marker Steer Steakhouse', 'Radish & Rye', 'Sasse
 nashville_dining = ['Butcher & Bee', 'Etch', 'The Catbird Seat', 'Adele\'s', 'Kayne Prime Steakhouse']
 washington_dc_dining = ['Estadio', 'The Dabney', 'Le Diplomate', 'Fiola Mare', 'Founding Farmers']
 
-print('Let\'s plan a fun day trip!')
+def main_app():
+    print('Let\'s plan a fun day trip!')
 
-#selecting destination 
-user_selection = ''
-while user_selection != 'y':
-    destination_pick = choice(destinations)
-    print(f'The destination we have selected is {destination_pick}.')
-    user_selection = input('Does that sound good? Enter y or n: ')
-    if user_selection == 'y':
-        print(f'Great! You are going to {destination_pick}.')
-    elif user_selection == 'n':
-        print('Okay, lets try a different option.')
-    else:
-        print('Error. Please enter y or n')
+    destination_pick = user_chooses_option(destinations, 'destination')
+    dining_pick = user_chooses_dining(destination_pick)
+    transportation_pick = user_chooses_option(transportations, 'transportation')
+    entertainment_pick = user_chooses_option(entertainments, 'entertainment')
 
-#selecting dining
-user_selection = ''
-while user_selection != 'y':
-    if destination_pick == 'Austin':      #dining lists are specific to the destination
-        dining_pick = choice(austin_dining)
-    elif destination_pick == 'New Orleans':
-        dining_pick = choice(new_orleans_dining)
-    elif destination_pick == 'San Antonio':
-        dining_pick = choice(san_antonio_dining)
-    elif destination_pick == 'Chicago':
-        dining_pick = choice(chicago_dining)
-    elif destination_pick == 'Atlanta':
-        dining_pick = choice(atlanta_dining)   
-    elif destination_pick == 'Santa Fe':
-        dining_pick = choice(santa_fe_dining)
-    elif destination_pick == 'Nashville':
-        dining_pick = choice(nashville_dining)
-    elif destination_pick == 'Washington DC':
-        dining_pick = choice(washington_dc_dining)
+    print(f'Here is your final itinerary: \n You are travelling to {destination_pick} via {transportation_pick}. \n You will experience {entertainment_pick} and have a nice dinner at {dining_pick}.')
+    
 
-    print(f'You will be dining at {dining_pick}.')
-    user_selection = input('Does that sound good? Enter y or n: ')
-    if user_selection == 'y':
-        print(f'Great! {dining_pick} has delicious food.')
-    elif user_selection == 'n':
-        print('Okay, lets try a different restaurant.')
-    else:
-        print('Error. Please enter y or n')
+def rand_item_from_list(string_list):
+    return choice(string_list)
 
-#selecting transportation
-user_selection = ''
-while user_selection != 'y':
-    transportation_pick = choice(transportations)
-    print(f'You will be travelling via {transportation_pick}.')
-    user_selection = input('Is that okay? Enter y or n: ')
-    if user_selection == 'y':
-        print(f'Great! Your {transportation_pick} will be ready shortly.')
-    elif user_selection == 'n':
-        print('Okay, lets try a different option.')
-    else:
-        print('Error. Please enter y or n')
+def user_chooses_option(string_list, type_of_choice):
+    user_y_or_n = ''
+    copy_of_list = string_list
+    while user_y_or_n != 'y':
+        user_decision = rand_item_from_list(copy_of_list)
+        print(f'The {type_of_choice} we have selected is {user_decision}.')
+        user_y_or_n = input('Does that sound good? Enter y or n: ')
+        if user_y_or_n == 'y':
+            print(f'Great! You are going to {user_decision}.')
+        elif user_y_or_n == 'n':
+            print('Okay, lets try a different option.')
+            if len(copy_of_list) == 1:  #preventing stopping the program if no options left
+                print('Make up your mind!')
+                copy_of_list = string_list
+            copy_of_list.remove(user_decision)  #remove the already displayed option so user doesn't get it twice
+        else:
+            print('Error. Please enter y or n')
+    return user_decision
 
-#selecting entertainent
-user_selection = ''
-while user_selection != 'y':
-    entertainment_pick = choice(entertainments)
-    print(f'Your entertainment for the day will be {entertainment_pick}.')
-    user_selection = input('Does that sound fun? Enter y or n: ')
-    if user_selection == 'y':
-        print(f'Great! We hope you have fun at {entertainment_pick}.')
-    elif user_selection == 'n':
-        print('Okay, lets try a different option.')
-    else:
-        print('Error. Please enter y or n')
+def user_chooses_dining(destination_string):
+    if destination_string == 'Austin':
+        return user_chooses_option(austin_dining, 'restaurant')
+    elif destination_string == 'New Orleans':
+        return user_chooses_option(new_orleans_dining, 'restaurant')
+    elif destination_string == 'San Antonio':
+        return user_chooses_option(san_antonio_dining, 'restaurant')
+    elif destination_string == 'Chicago':
+        return user_chooses_option(chicago_dining, 'restaurant')
+    elif destination_string == 'Atlanta':
+        return user_chooses_option(atlanta_dining, 'restaurant')
+    elif destination_string == 'Santa Fe':
+        return user_chooses_option(santa_fe_dining, 'restaurant')
+    elif destination_string == 'Nashville':
+        return user_chooses_option(nashville_dining, 'restaurant')
+    elif destination_string == 'Washington DC':
+        return user_chooses_option(washington_dc_dining, 'restaurant')
+
+def confirm_itinerary():
+    user_selection = ''
+    while user_selection != 'y' and user_selection != 'n':     
+        user_selection = input('Does everything look good? Enter y or n: ')
+        if user_selection == 'y':
+            print ('Awesome! Enjoy your trip.')
+            return True
+        elif user_selection == 'n':
+            print('Sorry, let\'s try again.')
+            return False
+        else:
+            print('Error. Please enter y or n: ')
+
+
+is_user_satisfied = False
+while is_user_satisfied != True:
+    main_app()
+    is_user_satisfied = confirm_itinerary()
+
+
 
